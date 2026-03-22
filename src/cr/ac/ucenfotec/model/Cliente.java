@@ -19,31 +19,27 @@ public class Cliente extends Usuario {
     public List<Material> getPrestamos() { return List.copyOf(prestamos);}
 
     public void rentarMaterial(Material material){
-        if (material.estaDisponible()){
-            material.rentar(this);
-            prestamos.add(material);
-        }else {
-            System.out.println("Material no disponible.");
+        if (material == null){
+            System.out.println("Material inválido");
+            return;
         }
+        if (!material.estaDisponible()){
+            System.out.println("Material no disponible.");
+            return;
+        }
+        material.rentar(this);
+        prestamos.add(material);
+
+        System.out.println("\n" + nombre + " ha rentado " + material.getTitulo() +
+                " en formato " + material.getClass().getSimpleName());
+
     }
 
     public void devolverMaterial(int indice){
-        if (indice >0 && indice < prestamos.size()){
-            Material material = prestamos.get(indice);
-            material.devolver();
-            prestamos.remove(indice);
-        }else {
-            System.out.println("¡Índice inválido!");
-        }
-
+        Material material = prestamos.get(indice);
+        material.devolver();
+        prestamos.remove(indice);
+        System.out.println(nombre + ", ¡" + material.getTitulo() + " devuelto correctamente!");
     }
-
-    public Material buscarPrestamo(int indice){
-        if (indice >= 0 && indice < prestamos.size()){
-            return prestamos.get(indice);
-        }
-        return null;
-    }
-
 
 }

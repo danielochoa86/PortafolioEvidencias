@@ -22,6 +22,7 @@ public class VideoRentalSystem {
 
     //getter
     public List<Material> mostrarCatalogo(){ return List.copyOf(catalogo);}
+    public List<Cliente> listarClientes(){return List.copyOf(clientes);}
 
     //metodos de registro
     public void registrarCliente(Cliente user){clientes.add(user);}
@@ -53,37 +54,6 @@ public class VideoRentalSystem {
         }
         return null;
     }
-
-    //otros metodos
-    public void rentarMaterial(int idCliente, int idMaterial){
-        Cliente cliente = buscarCliente(idCliente);
-        Material material = buscarMaterial(idMaterial);
-
-        if (cliente == null){
-            System.out.println("Cliente no encontrado.");
-            return;
-        }
-
-        if (material == null){
-            System.out.println("Material no encontrado.");
-            return;
-        }
-
-        cliente.rentarMaterial(material);
-
-    }
-
-    public void devolverMaterial(int idCliente, int idMaterial){
-        Cliente cliente = buscarCliente(idCliente);
-
-        if (cliente == null){
-            System.out.println("Cliente no encontrado.");
-            return;
-        }
-        cliente.devolverMaterial(idMaterial);
-
-    }
-
 
 
 }

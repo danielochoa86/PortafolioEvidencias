@@ -10,8 +10,6 @@ public class VHS extends Material{
         this.duracionMin = duracionMin;
     }
 
-    public int getDuracionMin() {return duracionMin;}
-
     //toString
     public String toString(){
         return super.toString() + " | Duración: " + duracionMin + " min";

@@ -19,13 +19,12 @@ public abstract class Material implements Rentable{
     public int getId() {return id;}
     public String getTitulo() {return titulo;}
     public int getYear() {return year;}
-    public boolean isDisponible() {return disponible;}
 
     //setters
     public void devolver(){disponible = true;}
 
     //métodos
-    public void rentar(Usuario usuario){
+    public void rentar(Cliente cliente){
         if (disponible){
             disponible = false;
         }else {
@@ -33,9 +32,7 @@ public abstract class Material implements Rentable{
         }
     }
 
-    public boolean estaDisponible(){
-        return disponible;
-    }
+    public boolean estaDisponible(){return disponible;}
 
     public String toString(){
         return "ID:" + id +

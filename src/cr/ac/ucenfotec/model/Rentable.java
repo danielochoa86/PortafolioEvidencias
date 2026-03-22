@@ -2,7 +2,7 @@ package cr.ac.ucenfotec.model;
 
 public interface Rentable {
 
-    void rentar(Usuario usuario);
+    void rentar(Cliente cliente);
     void devolver();
     boolean estaDisponible();
 

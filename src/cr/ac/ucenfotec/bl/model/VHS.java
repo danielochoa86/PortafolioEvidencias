@@ -1,13 +1,17 @@
-package cr.ac.ucenfotec.model;
+package cr.ac.ucenfotec.bl.model;
 
 public class VHS extends Material{
 
     private int duracionMin;
 
     //constructor
-    public VHS(int id, String titulo, int year, int duracionMin) {
-        super(id, titulo, year);
+    public VHS(String titulo, int year, int duracionMin) {
+        super(titulo, year);
         this.duracionMin = duracionMin;
+    }
+
+    public int getDuracionMin() {
+        return duracionMin;
     }
 
     //toString

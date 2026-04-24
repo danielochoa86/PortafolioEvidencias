@@ -1,24 +1,18 @@
 package cr.ac.ucenfotec.ui;
 
-import cr.ac.ucenfotec.model.*;
-import cr.ac.ucenfotec.system.VideoRentalSystem;
-
+import cr.ac.ucenfotec.bl.model.*;
+import cr.ac.ucenfotec.tl.Controlador;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
 
-    private VideoRentalSystem vrs;
+    private Controlador controlador;
     private Scanner sc;
-    private int u_counter;
-    private int m_counter;
 
-    public Menu(VideoRentalSystem vrs){
+    public Menu(){
+        controlador = new Controlador();
         this.sc = new Scanner(System.in);
-        this.vrs = vrs;
-        u_counter = 0;
-        m_counter = 0;
     }
 
     public void ejecutar(){
@@ -38,8 +32,8 @@ public class Menu {
             switch (opcion){
                 case 1 -> registrarEmpleadoUI();
                 case 2 -> registrarClienteUI();
-                case 3 -> registrarMarterialUI();
-                case 4 -> mostrarCatalogoUI();
+                case 3 -> registrarMaterialUI();
+                case 4 -> listarMaterialesUI();
                 case 5 -> rentarMaterialUI();
                 case 6 -> devolverMaterialUI();
                 case 7 -> listarPrestamosUI();
@@ -54,207 +48,244 @@ public class Menu {
 
     //metodos de registro
     public void registrarClienteUI(){
-        System.out.println("\n===== REGISTRO USUARIO =====");
-        String nombre = userInput("\nIngrese nombre del cliente:");
-        String email = userInput("\nIngrese email del cliente:");
-        Cliente user = new Cliente(u_counter++,nombre,email);
-        vrs.registrarCliente(user);
-        System.out.println("\nUsuario registrado: " + user.getNombre());
+        try {
+            System.out.println("\n===== REGISTRO USUARIO =====");
+            String nombre = userInput("\nIngrese nombre del cliente:");
+            String email = userInput("\nIngrese email del cliente:");
+
+            String resultado = controlador.registrarCliente(nombre, email);
+            System.out.println("\n" + resultado);
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al registrar el cliente.");
+        }
     }
 
     public void registrarEmpleadoUI(){
-        System.out.println("\n===== REGISTRO EMPLEADO =====");
-        String nombre = userInput("\nIngrese nombre del empleado:");
-        String puesto = userInput("\nIngrese el puesto:");
-        Empleado emp = new Empleado(u_counter++,nombre,puesto);
-        vrs.registrarEmpleados(emp);
-        System.out.println("\nUsuario registrado: " + emp.getNombre());
+        try {
+            System.out.println("\n===== REGISTRO EMPLEADO =====");
+            String nombre = userInput("\nIngrese nombre del empleado:");
+            String puesto = userInput("\nIngrese el puesto:");
+
+            String resultado = controlador.registrarEmpleado(nombre, puesto);
+            System.out.println("\n" + resultado);
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al registrar el empleado.");
+        }
     }
 
-    public void registrarMarterialUI(){
-        System.out.println("\n===== REGISTRO MATERIAL =====");
-        System.out.println("\nTipo de material:");
-        System.out.println("1. VHS");
-        System.out.println("2. DVD");
-        System.out.println("3. Bluray");
-        System.out.println("4. Volver");
+    public void registrarMaterialUI(){
+        try {
+            System.out.println("\n===== REGISTRO MATERIAL =====");
+            System.out.println("\nTipo de material:");
+            System.out.println("1. VHS");
+            System.out.println("2. DVD");
+            System.out.println("3. Bluray");
+            System.out.println("4. Volver");
 
-        int seleccion = leerEnteroMensj("\nIngrese su selección:");
-        System.out.println("\nIngrese la información que se le solicita");
-        String titulo = userInput("Título:");
+            int seleccion = leerEnteroMensj("\nIngrese su selección:");
 
-        switch (seleccion){
-            case 1 -> {
-                int year = leerEnteroMensj("Año de release");
-                int duracion = leerEnteroMensj("Duración:");
-                VHS vhs = new VHS(m_counter++,titulo,year,duracion);
-                vrs.registrarMaterial(vhs);
-                System.out.println("VHS Registrado: " + vhs);
-            }
-            case 2 -> {
-                int year = leerEnteroMensj("Año de release: ");
-                int region = leerEnteroMensj("Código de región:" );
-                DVD dvd = new DVD(m_counter++,titulo,year,region);
-                vrs.registrarMaterial(dvd);
-                System.out.println("DVD Registrado: " + dvd);
-            }
-            case 3 -> {
-                int year = leerEnteroMensj("Año de release: ");
-                String resolucion = userInput("Resolución:" );
-                BluRay br = new BluRay(m_counter++,titulo,year,resolucion);
-                vrs.registrarMaterial(br);
-                System.out.println("DVD Registrado: " + br);
-            }
-            case 4 -> {
+            if (seleccion == 4) {
                 System.out.println("Regresando al menú principal.");
-                return;}
-            default -> opcionInvalida();
+                return;
+            }
+
+            if (seleccion < 1 || seleccion > 4) {
+                opcionInvalida();
+                return;
+            }
+
+            System.out.println("\nIngrese la información que se le solicita");
+            String titulo = userInput("Título:");
+
+            String resultado;
+
+            switch (seleccion) {
+                case 1 -> {
+                    int year = leerEnteroMensj("Año de release:");
+                    int duracion = leerEnteroMensj("Duración:");
+                    resultado = controlador.registrarVHS(titulo, year, duracion);
+                    System.out.println(resultado);
+                }
+                case 2 -> {
+                    int year = leerEnteroMensj("Año de release:");
+                    int region = leerEnteroMensj("Código de región:");
+                    resultado = controlador.registrarDVD(titulo, year, region);
+                    System.out.println(resultado);
+                }
+                case 3 -> {
+                    int year = leerEnteroMensj("Año de release:");
+                    String resolucion = userInput("Resolución:");
+                    resultado = controlador.registrarBluRay(titulo, year, resolucion);
+                    System.out.println(resultado);
+                }
+                default -> opcionInvalida();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al registrar el material.");
         }
     }
 
     //metodos varios
-    public void mostrarCatalogoUI(){
-        System.out.println("\n==== Catálogo ====\n");
-        listarMaterialesUI();
-        System.out.println("\nRegresando al menú principal.\n");
-    }
+    public void rentarMaterialUI(){
+        try {
+            System.out.println("\n==== Rentar material ====\n");
+            ArrayList<String> materiales = controlador.listarMateriales();
 
-    void rentarMaterialUI(){
-        System.out.println("\n==== Rentar material ====\n");
-        List<Material> catalogo = vrs.mostrarCatalogo();
-        if (catalogo.isEmpty()){
-            System.out.println("No hay material registrado aún");
-            System.out.println("Regresando al menú principal");
-            return;
-        }
-        List<Cliente> clientes = vrs.listarClientes();
-        if (clientes.isEmpty()){
-            System.out.println("No hay clientes registrados aún.");
-            System.out.println("Registre al cliente primero.");
-            System.out.println("Regresando al menú principal");
-            return;
-        }
+            if (materiales.isEmpty()) {
+                System.out.println("No hay material registrado aún");
+                System.out.println("Regresando al menú principal");
+                return;
+            }
 
-        //primero selecciona al cliente que rentará el material
+            ArrayList<String> clientes = controlador.listarClientes();
+            if (clientes.isEmpty()) {
+                System.out.println("No hay clientes registrados aún.");
+                System.out.println("Registre al cliente primero.");
+                System.out.println("Regresando al menú principal");
+                return;
+            }
+
+            //primero selecciona al cliente que rentará el material
             System.out.println("Seleccione por su índice al cliente " +
                     "que rentará el material.");
             listarClientesUI();
-            int seleccion = leerEnteroMensj("Elija:");
+
+            int idCliente = leerEnteroMensj("Elija:");
 
             //buscar al cliente
-            Cliente cliente = vrs.buscarCliente(seleccion - 1);
-            if (cliente == null){return;}
+            Cliente cliente = controlador.buscarClientePorId(idCliente);
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
+            }
             System.out.println("Cliente seleccionado: " + cliente.getNombre());
 
-        //Seleccionar el material a rentar
-            System.out.println("Ahora seleccione por su índice el materioal " +
+            //Seleccionar el material a rentar
+            System.out.println("\nAhora seleccione por su índice el material " +
                     "que rentará " + cliente.getNombre());
             listarMaterialesUI();
-            seleccion = leerEnteroMensj("Elija:");
-            Material material = vrs.buscarMaterial(seleccion -1);
-            if (material == null){return;}
+            int idMaterial = leerEnteroMensj("Elija:");
 
-        //Finalmente, realizamos la renta
-        cliente.rentarMaterial(material);
+            //Realizar renta
+            String resultado = controlador.registrarPrestamo(idCliente, idMaterial);
+            System.out.println("\n" + resultado);
+
+        } catch (Exception e) {
+            System.out.println("Ocurrió un error al rentar el material: " + e.getMessage());
+        }
+
     }
 
     public void devolverMaterialUI(){
-        System.out.println("\n==== Devolución de material ====\n");
-        System.out.println("Seleccione un cliente por su índice " +
-                "para validar si tiene préstamos activos.");
-        List<Cliente> clientes = listarClientesUI();
-        if (clientes == null){return;}
 
-        int seleccion = leerEnteroMensj("Elija:");
+        try {
+            System.out.println("\n==== Devolución de material ====\n");
 
-        if (seleccion <= 0 || seleccion > clientes.size()){
-            opcionInvalida();
-            return;
-        }
+            ArrayList<String> clientes = controlador.listarClientes();
 
-        Cliente user = vrs.buscarCliente(seleccion - 1);
-        if (user == null){return;}
-
-        List<Material> prestamos = user.getPrestamos();
-        if (prestamos.isEmpty()){
-            System.out.println(user.getNombre() + " no tiene préstmos activos.");
-            return;
-        }
-
-        //a continuacion se listan los prestamos activos del usuario
-        System.out.println("A continuación se muestran los préstamos activos " +
-                "de " + user.getNombre() + ". \nSeleccione un material " +
-                "por su número de índice:");
-
-        for (int i = 0; i < prestamos.size() ; i++){
-            System.out.println((i+1) + " - " + prestamos.get(i).getTitulo() +
-                    " - " + prestamos.get(i).getClass().getSimpleName());
-        }
-        //se da a elegir el material a devolver
-        seleccion = leerEnteroMensj("Elija:");
-        if (seleccion <= 0 || seleccion > prestamos.size()){
-            opcionInvalida();
-            return;
-        }
-        user.devolverMaterial(seleccion-1);
-    }
-
-    public void listarPrestamosUI() {
-        System.out.println("\n==== Préstamos activos ====\n");
-        List<Cliente> clientes = vrs.listarClientes();
-        if (clientes.isEmpty()){
-            System.out.println("No hay clientes registrados aún");
-            return;
-        }
-        List<Material> prestamos;
-        int contador = 1;
-
-        for (Cliente c : clientes) {
-            prestamos = c.getPrestamos();
-            if (prestamos.isEmpty()) {
-                continue;
+            if (clientes.isEmpty()){
+                System.out.println("No hay clientes registrados aún.");
+                System.out.println("Regresando al menú principal.");
+                return;
             }
-            for (Material m : prestamos){
-                System.out.println(contador + ". " +
-                        m.getTitulo() + " | " +
-                        m.getClass().getSimpleName() + " | " +
-                        c.getNombre());
-                contador++;
+
+            System.out.println("Seleccione un cliente por su ID para validar " +
+                    "si tiene préstamos activos:");
+            listarClientesUI();
+
+            int idCliente = leerEnteroMensj("Ingrese el ID del cliente:");
+
+            Cliente cliente = controlador.buscarClientePorId(idCliente);
+
+            if (cliente == null) {
+                System.out.println("Cliente no encontrado.");
+                return;
             }
-        }
 
-        if (contador == 1){
-            System.out.println("No hay préstamos activos.\n");
+            ArrayList<String> prestamos = controlador.listarPrestamosPorCliente(idCliente);
+
+            if (prestamos.isEmpty()){
+                System.out.println(cliente.getNombre() + " no tiene préstamos activos.");
+                return;
+            }
+
+            //a continuacion se listan los prestamos activos del usuario
+            System.out.println("\nA continuación se muestran los préstamos activos " +
+                    "de " + cliente.getNombre() + ":");
+
+            for (String p : prestamos){
+                System.out.println(p);
+            }
+
+            int idMaterial = leerEnteroMensj("\nIngrese el ID del material a devolver:");
+
+            String resultado = controlador.devolverPrestamo(idCliente,idMaterial);
+            System.out.println("\n" + resultado);
+
+        } catch (Exception e){
+            System.out.println("Ocurrió un error al devolver el material: " + e.getMessage());
         }
-        System.out.println("----------------------");
     }
-
 
     //listas UI
-    public List<Material> listarMaterialesUI(){
-        List<Material> catagolo = vrs.mostrarCatalogo();
-        if (catagolo.isEmpty()){
-            System.out.println("\nNo hay material registrado aún\n");
-            return null;
+    public void listarPrestamosUI() {
+        try{
+            System.out.println("\n==== Préstamos activos ====\n");
+
+            ArrayList<String> prestamos = controlador.listarPrestamos();
+            if (prestamos.isEmpty()){
+                System.out.println("No hay préstamos activos.\n");
+                return;
+            }
+
+            int contador = 1;
+
+            for (String p : prestamos){
+                System.out.println(contador + ". " + p);
+                contador++;
+            }
+            System.out.println("\nRegresando al menú principal.\n");
+
+        } catch (Exception e){
+            System.out.println("Ocurrió un error al listar los préstamos: " + e.getMessage());
         }
-        for (int i = 0; i < catagolo.size() ; i++){
-            System.out.println((i+1) + " - " + catagolo.get(i).getTitulo() +
-                    " - " + catagolo.get(i).getClass().getSimpleName() +
-                    " - " + (catagolo.get(i).estaDisponible() ? "Disponible" : "No disponible"));
-        }
-        return catagolo;
     }
 
-    public List<Cliente> listarClientesUI(){
-        List<Cliente> clientes = vrs.listarClientes();
-        if (clientes.isEmpty()){
-            System.out.println("\nNo hay clientes registrados aún\n");
-            return null;
+    public void listarMaterialesUI(){
+        try {
+            System.out.println("\n==== Catálogo ====\n");
+            ArrayList<String> materiales = controlador.listarMateriales();
+            if (materiales.isEmpty()){
+                System.out.println("\nNo hay material registardo aún.\n");
+                return;
+            }
+            for (String m : materiales){
+                System.out.println(m);
+            }
+
+        } catch (Exception e){
+            System.out.println("Ocurrió un error al listar materiales: " + e.getMessage());
         }
-        for (int i = 0; i < clientes.size() ; i++){
-            System.out.println((i+1) + " - " + clientes.get(i).getNombre());
+    }
+
+    public void listarClientesUI(){
+        try {
+            ArrayList<String> clientes = controlador.listarClientes();
+            if (clientes.isEmpty()){
+                System.out.println("\nNo hay clientes registrados aún.\n");
+                return;
+            }
+
+            for (String c : clientes){
+                System.out.println(c);
+            }
+
+        } catch (Exception e){
+            System.out.println("Ocurrió un error al listar los clientes: " + e.getMessage());
         }
-        return clientes;
     }
 
     //lectores

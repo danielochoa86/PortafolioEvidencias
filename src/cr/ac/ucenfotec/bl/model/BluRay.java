@@ -1,12 +1,16 @@
-package cr.ac.ucenfotec.model;
+package cr.ac.ucenfotec.bl.model;
 
 public class BluRay extends Material {
 
     private String resolucion;
 
-    public BluRay(int id, String titulo, int year, String resolucion) {
-        super(id, titulo, year);
+    public BluRay(String titulo, int year, String resolucion) {
+        super(titulo, year);
         this.resolucion = resolucion;
+    }
+
+    public String getResolucion() {
+        return resolucion;
     }
 
     public String toString(){

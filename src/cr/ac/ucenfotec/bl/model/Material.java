@@ -1,22 +1,19 @@
-package cr.ac.ucenfotec.model;
+package cr.ac.ucenfotec.bl.model;
 
 public abstract class Material implements Rentable{
 
-    protected int id;
     protected String titulo;
     protected int year;
     protected boolean disponible;
 
     //constructor
-    public Material(int id, String titulo, int year) {
-        this.id = id;
+    public Material(String titulo, int year) {
         this.titulo = titulo;
         this.year = year;
         this.disponible = true;
     }
 
     //getters
-    public int getId() {return id;}
     public String getTitulo() {return titulo;}
     public int getYear() {return year;}
 
@@ -35,8 +32,7 @@ public abstract class Material implements Rentable{
     public boolean estaDisponible(){return disponible;}
 
     public String toString(){
-        return "ID:" + id +
-                " | Título: " + titulo +
+        return "Título: " + titulo +
                 " | Año: " + year +
                 " | Disponible: " + disponible;
     }

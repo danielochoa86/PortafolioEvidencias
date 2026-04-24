@@ -1,4 +1,4 @@
-package cr.ac.ucenfotec.model;
+package cr.ac.ucenfotec.bl.model;
 
 public interface Rentable {
 
